@@ -90,6 +90,17 @@ module CommandT
     end
     guard :show_tag_finder
 
+    def show_ex_finder
+      @path          = VIM::pwd
+      @active_finder = ex_finder
+      show
+
+      @prompt.abbrev = ::VIM::evaluate('a:arg')
+      @prompt.cursor_end
+      @needs_update = true
+    end
+    guard :show_ex_finder
+
     def show_file_finder
       # optional parameter will be desired starting directory, or ""
 
@@ -414,7 +425,7 @@ module CommandT
       numbers     = ('0'..'9').to_a.join
       lowercase   = ('a'..'z').to_a.join
       uppercase   = lowercase.upcase
-      punctuation = '<>`@#~!"$%&/()=+*-_.,;:?\\\'{}[] ' # and space
+      punctuation = '<>`@#~!"$%&/()=+*-_.,;:?\\\'{}[]^| ' # and space
       (numbers + lowercase + uppercase + punctuation).each_byte do |b|
         map "<Char-#{b}>", 'HandleKey', b
       end
@@ -451,6 +462,12 @@ module CommandT
             end
           end
         end
+      end
+
+      if @active_finder == ex_finder
+        ::VIM::command 'execute "silent! normal! :\<C-u>noremap <silent> <buffer> <C-l> ' \
+          ':<C-u>call CommandTCursorEnd()<CR>' \
+          ':<C-u>call CommandTHandleKey(92)<CR>:<C-u>call CommandTHandleKey(48)<CR>\<CR>"'
       end
     end
 
@@ -501,6 +518,10 @@ module CommandT
     def tag_finder
       @tag_finder ||= CommandT::Finder::TagFinder.new \
         :include_filenames => VIM::get_bool('g:CommandTTagIncludeFilenames')
+    end
+
+    def ex_finder
+      @ex_finder ||= CommandT::Finder::ExFinder.new self
     end
   end # class Controller
 end # module CommandT

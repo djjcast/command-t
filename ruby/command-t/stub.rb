@@ -18,7 +18,8 @@ module CommandT
       :show_file_finder,
       :show_jump_finder,
       :show_mru_finder,
-      :show_tag_finder
+      :show_tag_finder,
+      :show_ex_finder
     ].each do |method|
       define_method(method) { warn *@@load_error }
     end

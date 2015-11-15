@@ -16,6 +16,7 @@ module CommandT
     autoload :JumpFinder,      'command-t/finder/jump_finder'
     autoload :MRUBufferFinder, 'command-t/finder/mru_buffer_finder'
     autoload :TagFinder,       'command-t/finder/tag_finder'
+    autoload :ExFinder,        'command-t/finder/ex_finder'
 
     include PathUtilities
 

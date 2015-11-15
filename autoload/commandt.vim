@@ -53,6 +53,14 @@ function! commandt#CommandTShowTagFinder() abort
   endif
 endfunction
 
+function! commandt#CommandTShowExFinder(arg) abort
+  if has('ruby')
+    ruby $command_t.show_ex_finder
+  else
+    call s:CommandTRubyWarning()
+  endif
+endfunction
+
 function! commandt#CommandTFlush() abort
   if has('ruby')
     ruby $command_t.flush
